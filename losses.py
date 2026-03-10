@@ -4,6 +4,7 @@
 from abc import abstractmethod
 import numpy as np
 
+
 class LossFunction:
 
     @abstractmethod
@@ -13,6 +14,7 @@ class LossFunction:
     @abstractmethod
     def derivative(self, y_true, y_pred):
         raise NotImplementedError
+
 
 class MeanAbsoluteError(LossFunction):
 
@@ -32,7 +34,6 @@ class MeanSquaredError(LossFunction):
         return 2 * (y_pred - y_true) / y_true.size
 
 
-## se quisermos só testar entre duas categorias tipo AI ou Humano
 class BinaryCrossEntropy(LossFunction):
 
     def loss(self, y_true, y_pred):
@@ -44,14 +45,12 @@ class BinaryCrossEntropy(LossFunction):
         return -(y_true / p - (1 - y_true) / (1 - p)) / y_true.size
 
 
-## se quisermos testar todas as categorias diferentes que vamos ter 
 class CategoricalCrossEntropy(LossFunction):
-    
+
     def loss(self, y_true, y_pred):
         p = np.clip(y_pred, 1e-15, 1 - 1e-15)
         return -np.sum(y_true * np.log(p)) / y_true.shape[0]
 
     def derivative(self, y_true, y_pred):
-        return (y_pred - y_true) / y_true.shape[0] 
-    
-
+        p = np.clip(y_pred, 1e-15, 1 - 1e-15)
+        return -(y_true / p) / y_true.shape[0]

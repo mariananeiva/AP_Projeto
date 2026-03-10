@@ -35,19 +35,36 @@ class Layer(metaclass=ABCMeta):
 
 class DenseLayer(Layer):
     
-    def __init__(self, n_units, input_shape=None):
+    def __init__(self, n_units, input_shape=None, l2_lambda=0.0, initialization="xavier"):
         super().__init__()
         self.n_units = n_units
         self._input_shape = input_shape
+
+        self.l2_lambda = l2_lambda
+        self.initialization = initialization
 
         self.input = None
         self.output = None
         self.weights = None
         self.biases = None
+
+        self.dweights = None
+        self.dbiases = None
         
     def initialize(self, optimizer):
-        limit = np.sqrt(6 / (self.input_shape()[0] + self.n_units))
-        self.weights = np.random.uniform(-limit, limit, (self.input_shape()[0], self.n_units))
+        input_dim = self.input_shape()[0]
+
+        if self.initialization == "he":
+            std = np.sqrt(2.0 / input_dim)
+            self.weights = np.random.randn(input_dim, self.n_units) * std
+
+        elif self.initialization == "xavier":
+            limit = np.sqrt(6.0 / (input_dim + self.n_units))
+            self.weights = np.random.uniform(-limit, limit, (input_dim, self.n_units))
+
+        else:
+            self.weights = np.random.randn(input_dim, self.n_units) * 0.01
+
         self.biases = np.zeros((1, self.n_units))
         
         self.w_opt = copy.deepcopy(optimizer)
@@ -63,13 +80,21 @@ class DenseLayer(Layer):
         return self.output
  
     def backward_propagation(self, output_error):
-         input_error = np.dot(output_error, self.weights.T)
-         weights_error = np.dot(self.input.T, output_error)
-         bias_error = np.sum(output_error, axis=0, keepdims=True)
+        input_error = np.dot(output_error, self.weights.T)
+
+        self.dweights = np.dot(self.input.T, output_error)
+        self.dbiases = np.sum(output_error, axis=0, keepdims=True)
+
+        if self.l2_lambda > 0:
+            self.dweights += self.l2_lambda * self.weights
     
-         self.weights = self.w_opt.update(self.weights, weights_error)
-         self.biases = self.b_opt.update(self.biases, bias_error)
-         return input_error
+        self.weights = self.w_opt.update(self.weights, self.dweights)
+        self.biases = self.b_opt.update(self.biases, self.dbiases)
+
+        return input_error
+ 
+    def output_shape(self):
+        return (self.n_units,)
  
     def output_shape(self):
          return (self.n_units,) 
@@ -83,12 +108,16 @@ class DropoutLayer(Layer):
 
     def forward_propagation(self, input_data, training):
         if training:
-            self.mask = np.random.binomial(1, 1 - self.probability, size=input_data.shape) / (1 - self.probability)
+            keep_prob = 1 - self.probability
+            self.mask = np.random.binomial(1, keep_prob, size=input_data.shape) / keep_prob
             return input_data * self.mask
+
+        self.mask = None
         return input_data
 
     def backward_propagation(self, output_error):
-        # Só passamos o erro pelos neurónios que não foram desligados
+        if self.mask is None:
+            return output_error
         return output_error * self.mask
 
     def output_shape(self):
