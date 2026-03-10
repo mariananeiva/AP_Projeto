@@ -32,7 +32,7 @@ def train_multi_class_model(X_train, y_train, input_dim):
     loader = DataLoader(dataset, batch_size=64, shuffle=True)
 
     # Inicializar modelo (64 neurónios na camada oculta)
-    model = TextClassifierDNN(input_size=input_dim, hidden_size=64, num_classes=5)
+    model = TextClassifierDNN(input_size=input_dim, hidden_size=64, num_classes=4)
     
     criterion = nn.CrossEntropyLoss() 
     optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
