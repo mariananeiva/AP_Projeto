@@ -4,8 +4,8 @@
 import numpy as np
 from layers import DenseLayer
 from losses import LossFunction, MeanSquaredError
-from optimizer import Optimizer
-from metrics import mse
+from optimizer import SGD
+from sklearn.metrics import mean_squared_error as mse
 
 class NeuralNetwork:
  
@@ -16,7 +16,7 @@ class NeuralNetwork:
                  early_stopping_patience = 10): # Adicionada paciência para Early Stopping
         self.epochs = epochs
         self.batch_size = batch_size
-        self.optimizer = Optimizer(learning_rate=learning_rate, momentum=momentum)
+        self.optimizer = SGD(learning_rate=learning_rate, momentum=momentum)
         self.verbose = verbose
         self.loss = loss()
         self.metric = metric
