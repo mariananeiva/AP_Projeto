@@ -5,9 +5,10 @@ Este repositório contém o código desenvolvido para o Trabalho Prático da Uni
 
 O objetivo principal deste projeto consiste no desenvolvimento de modelos de Machine Learning e Deep Learning capazes de distinguir (problema multi-classe) entre texto gerado por modelos de Inteligência Artificial (Google, Anthropic, Meta, OpenAI) e texto escrito de forma genuína por seres humanos, em Inglês.
 
-### 🎯 Foco Atual: 1ª Submissão
-No momento atual, o código e os modelos desenvolvidos encontram-se direcionados para a **1ª Submissão** do projeto (17 de março), que engloba:
-- A apresentação dos **dois melhores modelos** desenvolvidos por nós (um com **implementação própria em NumPy** e outro desenvolvido com recurso a **PyTorch**).
+### 🎯 Foco Atual: 1ª e 2ª Submissão
+O projeto engloba atualmente duas fases fundamentais de entrega:
+- **1ª Submissão** (17 de março): Apresentação dos **dois melhores modelos** iniciais (um com **implementação própria em NumPy** e outro desenvolvido nativamente em **PyTorch** linear).
+- **2ª Submissão**: Foco no processamento de texto avançado (extração de métricas Handcrafted misturadas com TF-IDF) e treino de modelos sequenciais complexos (ex: **LSTMClassifier**). Foram adicionados pipelines preparados para importação de novos datasets externos.
 
 ## 📁 Estrutura do Repositório
 
