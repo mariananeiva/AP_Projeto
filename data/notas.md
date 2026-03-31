@@ -1,13 +1,13 @@
-Total de linhas (Textos): 35905
+Total de linhas (Textos): 15555
 
 distribuição:
-human      17952
+human      7650
 
-modelos    17 953
-- openai    4478
-- google    4450
-- meta      4450
-- anthropic 4574
+modelos    7 905
+- openai    2435
+- google    1900
+- meta      1838
+- mistral   1732
 
 https://huggingface.co/datasets/abisee/cnn_dailymail
 https://huggingface.co/datasets/stanfordnlp/sst2
